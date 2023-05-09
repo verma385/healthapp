@@ -14,6 +14,7 @@ const multer = require("multer");
 const axios = require("axios");
 const fs = require("fs");
 const path = require("path");
+require('dotenv').config();
 
 const User = require('./models/user');
 const Message = require("./models/message");
@@ -32,11 +33,12 @@ const { profile } = require("console");
 // ***** Setting up middlewares BEGINS ***** //
 const oneHour = 1000 * 60 * 60 ;
 app.use(require("express-session")({
-    secret : "abdefghijkmnopqrstuvwxyz",
+    secret : process.env.SECRET,
     resave : false,
     saveUninitialized : false,
     cookie: { maxAge: oneHour },
 }));
+
 app.use (cors ());
 app.use(bodyParser.json());
 app.use(passport.initialize());
@@ -61,7 +63,7 @@ app.use(cookieParser());
 //     else console.log("mongdb is connected");
 // });
 // const conn = mongoose.createConnection(mongourl);
-const mongourl = "mongodb://localhost:27017/healthcare"
+const mongourl = process.env.DATABASE_URL;
 
 mongoose.connect(mongourl, {
     useNewUrlParser: true,
@@ -264,10 +266,11 @@ const MAIL_SETTINGS = {
     secure: false,
     host: "smpt.gmail.com",
     auth: {
-      user: 'healthbot.application@gmail.com',
-      pass: 'ufhezoojxemdoyxx',
+      user: process.env.GMAIL_USER,
+      pass: process.env.GMAIL_PASS,
     },
 }
+
 const transporter = nodemailer.createTransport(MAIL_SETTINGS);
 
 // GENERATE OTP //
@@ -648,7 +651,9 @@ app.get("/o", (req, res)=>{
 
 
 // ***** Disease Predictin BEGINS ***** //
-var flask_uri = "http://127.0.0.1:8090" 
+
+var flask_uri = process.env.FLASK_URI;
+
 app.post("/prediction", (req, res)=>{
     var symptoms = req.body.symptoms;
     symptoms_formatted = [];
@@ -1032,9 +1037,10 @@ app.get("/intialise-photo", async (req, res)=>{
 
 
 // ***** Setting up Port BEGINS ***** //
-app.listen(5000,(err)=>{
+const port = process.env.PORT || 5000;
+app.listen(port,(err)=>{
     if(err) console.log('error');
-    else console.log('connected at 5000');
+    else console.log('connected at ', port);
 });
 // ***** Setting up Port ENDS ***** //
 
