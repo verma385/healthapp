@@ -1,0 +1,23 @@
+PYTHON 
+to create a virtual environment:
+    py -3 -m venv .venv
+
+to activate the virtual environment:
+    .venv\scripts\activate
+
+
+
+to update pip in the virtual environment:
+    python -m pip install --upgrade pip
+
+to install Flask in the virtual environment:
+    python -m pip install flask
+
+to install packages:
+    pip install <package_name>
+
+
+to run the app:
+    python -m flask run
+
+py .\app.py
